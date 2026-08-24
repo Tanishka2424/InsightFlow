@@ -1,0 +1,68 @@
+# =========================
+# Data
+# =========================
+data/
+*.csv
+*.parquet
+*.json
+*.xlsx
+*.xls
+
+# =========================
+# Environment / Secrets
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
+env/
+
+# =========================
+# Airflow
+# =========================
+airflow/logs/
+logs/
+*.log
+airflow/airflow.db
+airflow/*.db
+
+# =========================
+# dbt
+# =========================
+dbt/target/
+target/
+dbt/logs/
+dbt_packages/
+packages/
+manifest.json
+run_results.json
+
+# =========================
+# Docker generated data
+# =========================
+.docker/
+docker-data/
+docker-volumes/
+
+# =========================
+# IDE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# OS
+# =========================
+.DS_Store
+Thumbs.db

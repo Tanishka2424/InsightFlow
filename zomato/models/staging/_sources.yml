@@ -1,0 +1,20 @@
+sources:
+  - name: zomato
+    database: ZOMATO
+    schema: RAW
+    tables:
+      - name: restaurants
+        description: "Restaurants data from Zomato"
+      - name: users
+        description: "Users data from Zomato"  
+      - name: food
+        description: "Food data from Zomato"
+      - name: menu
+        description: "Menus data from Zomato"
+      - name: orders
+        description: "Orders data from Zomato"
+      - name: order_items
+        description: "Order items data from Zomato"  
+      - name: reviews
+        description: "Reviews data from Zomato"
+

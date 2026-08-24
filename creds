@@ -1,0 +1,10 @@
+STORAGE_AWS_IAM_USER_ARN = arn:aws:iam::008349342067:user/fz6y1000-s
+
+STORAGE_AWS_ROLE_ARN = arn:aws:iam::008349342067:user/fz6y1000-s
+
+STORAGE_AWS_EXTERNAL_ID = BU82905_SFCRole=2_yq6UJoL2wg94YA6c4EeS7gCl05c=
+
+snowflake:
+Account Identifier = KOMRMQG-ZU49263
+username = UTTARKARTANISHKA
+pass = BMWiscoming$2424
