@@ -67,3 +67,12 @@ docker-volumes/
 .DS_Store
 Thumbs.db
 creds
+
+#Test- api
+Gemini-test
+.env
+test_gem.py
+
+.user.yml
+dbt_projects.yml
+profiles.yml
