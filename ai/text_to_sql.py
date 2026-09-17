@@ -145,7 +145,7 @@ def get_connection():
         warehouse=os.getenv("SNOWFLAKE_WAREHOUSE"),
         database=os.getenv("SNOWFLAKE_DATABASE"),
         schema="MARTS",
-        role="DBT_ROLE"
+        role="ACCOUNTADMIN"
     )
 
 
