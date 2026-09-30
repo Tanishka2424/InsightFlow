@@ -44,7 +44,11 @@ INSIGHTS
 Natural-language questions
 AI responses
 Analytics results
-Dataset
+
+```
+
+
+## Dataset
 
 The project uses the Zomato dataset provided with the original project reference.
 
@@ -71,6 +75,7 @@ The large CSV files are intentionally not stored in this GitHub repository.
 
 They are downloaded separately and placed under the project's data/ directory before ingestion.
 
+```text
 data/
 ├── restaurants/
 ├── users/
@@ -79,14 +84,18 @@ data/
 ├── orders/
 ├── order_items/
 └── reviews/
+
+```
+
 Data Pipeline
-1. Source → Amazon S3
+**1. Source → Amazon S3**
 
 The raw CSV files are uploaded to Amazon S3.
 
 The storage structure follows one folder per dataset, with S3 acting as the raw data storage layer.
+![s3]docs/AWS_S3.png
 
-2. S3 → Snowflake
+**2. S3 → Snowflake**
 
 Snowflake is used as the central analytical data warehouse.
 
@@ -106,10 +115,12 @@ ZOMATO
 ├── STAGING
 ├── MARTS
 └── AI
+![snowflake]docs/snowflake_interface.png
 
-3. dbt Transformation Layer
+**3. dbt Transformation Layer**
 
 dbt handles the transformation of the raw Snowflake data.
+![lineageGraph]docs/dbt_LineageGraph.png
 
 The transformation flow is:
 
@@ -159,11 +170,11 @@ mart_review_insights
 
 These models provide a cleaner layer for analytics and AI applications.
 
-4. AI Layer
+## 4. AI Layer
 
 The AI layer is built on top of the transformed data. It currently contains three main capabilities.
 
-① LLM Enrichment
+**① LLM Enrichment**
 
 The first capability uses an LLM as a transformation step.
 
@@ -174,7 +185,7 @@ Topic
 Summarized information
 
 The general flow is:
-
+```text
 Review
   ↓
 LLM
@@ -184,10 +195,13 @@ Structured JSON
 Enriched Review Data
   ↓
 Analytics
+```
 
 This allows unstructured review text to become part of the analytical workflow.
+![Review_Enrichment]docs/enrichreviews_1.png
+![Review_Enrichment]docs/enrichreviews_2.png
 
-② RAG — Chat with Reviews
+**② RAG — Chat with Reviews**
 
 The second capability is Retrieval-Augmented Generation (RAG).
 
@@ -210,8 +224,9 @@ Grounded Answer
 The system retrieves relevant review content before generating the answer.
 
 This allows the response to be grounded in the actual review data rather than relying only on the LLM's general knowledge.
+![rag]docs/rag.png
 
-③ Text-to-SQL
+**③ Text-to-SQL**
 
 The third capability allows users to ask questions about the analytical warehouse using natural language.
 
@@ -236,8 +251,10 @@ SELECT-only validation
 The SQL generation is restricted to read-only queries before execution.
 
 This allows users to explore analytical data without manually writing SQL.
+![text_to_sql]docs/text_to_sql.png
 
-AI Layer at a Glance
+**AI Layer at a Glance**
+
                        AI LAYER
                            │
           ┌────────────────┼────────────────┐
@@ -260,9 +277,9 @@ The three capabilities solve different problems:
 | RAG            | Ask questions about review content                        |
 | Text-to-SQL    | Ask questions about structured warehouse data             |
 
-The Airflow environment has been configured and tested locally using Docker.
 
-Airflow Orchestration
+**Airflow Orchestration**
+The Airflow environment has been configured and tested locally using Docker.
 
 However, the complete scheduled workflow could not be fully executed against Snowflake because the available Snowflake trial/free-tier credits were exhausted during development.
 
@@ -277,11 +294,11 @@ However, the complete scheduled workflow could not be fully executed against Sno
 | Application | Streamlit |
 
 ##Limitations
-Snowflake: The trial credits were exhausted, so the complete cloud pipeline cannot currently be run end-to-end.
-Dataset: ~2.3 GB of CSV data is kept outside GitHub.
-AI APIs: LLM features depend on API availability, quotas, and rate limits.
-Dataset-specific: The current dbt models and business logic are built around the Zomato dataset.
-Production: Additional work would be required for production monitoring, secret management, CI/CD, alerting, and AI evaluation.
+-Snowflake: The trial credits were exhausted, so the complete cloud pipeline cannot currently be run end-to-end.
+-Dataset: ~2.3 GB of CSV data is kept outside GitHub.
+-AI APIs: LLM features depend on API availability, quotas, and rate limits.
+-Dataset-specific: The current dbt models and business logic are built around the Zomato dataset.
+-Production: Additional work would be required for production monitoring, secret management, CI/CD, alerting, and AI evaluation.
 
 ##What I Learned
 
@@ -289,27 +306,27 @@ This project helped me understand how the different parts of a data stack connec
 
 I worked with:
 
-S3 and cloud data storage
-Snowflake and analytical warehousing
-dbt transformations and data modelling
-Airflow and Docker
-LLM APIs and embeddings
-RAG
-Text-to-SQL
+-S3 and cloud data storage
+-Snowflake and analytical warehousing
+-dbt transformations and data modelling
+-Airflow and Docker
+-LLM APIs and embeddings
+-RAG
+-Text-to-SQL
 
 A major takeaway was that the quality of an AI application depends heavily on the data layer underneath it. Building the warehouse and transformation layer first made the AI components much more meaningful.
 
 The project also involved quite a bit of debugging, especially around dbt paths, Snowflake configuration, Docker environments, credentials, and Airflow integration. That was an important part of the learning process.
 
 ##Future Improvements
-Complete the Airflow pipeline with an active Snowflake environment
-Add automated data-quality monitoring
-Improve RAG evaluation
-Evaluate Text-to-SQL accuracy
-Add pipeline alerts and better observability
-Add CI/CD for dbt and Airflow
-Make the pipeline easier to adapt to other datasets
-Reference & Attribution
+-Complete the Airflow pipeline with an active Snowflake environment
+-Add automated data-quality monitoring
+-Improve RAG evaluation
+-Evaluate Text-to-SQL accuracy
+-Add pipeline alerts and better observability
+-Add CI/CD for dbt and Airflow
+-Make the pipeline easier to adapt to other datasets
+
 
 This project was developed while following the Zomato AI Data Engineering project by Darshil Parmar.
 
