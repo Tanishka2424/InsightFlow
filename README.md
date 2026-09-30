@@ -93,7 +93,7 @@ Data Pipeline
 The raw CSV files are uploaded to Amazon S3.
 
 The storage structure follows one folder per dataset, with S3 acting as the raw data storage layer.
-![s3]docs/AWS_S3.png
+![s3](docs/AWS_S3.png)
 
 **2. S3 → Snowflake**
 
@@ -115,12 +115,12 @@ ZOMATO
 ├── STAGING
 ├── MARTS
 └── AI
-![snowflake]docs/snowflake_interface.png
+![snowflake](docs/snowflake_interface.png)
 
 **3. dbt Transformation Layer**
 
 dbt handles the transformation of the raw Snowflake data.
-![lineageGraph]docs/dbt_LineageGraph.png
+![lineageGraph](docs/dbt_LineageGraph.png)
 
 The transformation flow is:
 
@@ -198,8 +198,8 @@ Analytics
 ```
 
 This allows unstructured review text to become part of the analytical workflow.
-![Review_Enrichment]docs/enrichreviews_1.png
-![Review_Enrichment]docs/enrichreviews_2.png
+![Review_Enrichment](docs/enrichreviews_1.png)
+![Review_Enrichment](docs/enrichreviews_2.png)
 
 **② RAG — Chat with Reviews**
 
@@ -224,7 +224,7 @@ Grounded Answer
 The system retrieves relevant review content before generating the answer.
 
 This allows the response to be grounded in the actual review data rather than relying only on the LLM's general knowledge.
-![rag]docs/rag.png
+![rag](docs/rag.png)
 
 **③ Text-to-SQL**
 
@@ -251,7 +251,7 @@ SELECT-only validation
 The SQL generation is restricted to read-only queries before execution.
 
 This allows users to explore analytical data without manually writing SQL.
-![text_to_sql]docs/text_to_sql.png
+![text_to_sql](docs/text_to_sql.png)
 
 **AI Layer at a Glance**
 
