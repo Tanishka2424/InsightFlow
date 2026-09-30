@@ -4,7 +4,7 @@
 
 InsightFlow is a data analytics project that combines cloud storage, data warehousing, dbt transformations, and AI-powered analysis.
 
-The project uses a Zomato dataset and takes the data through:
+The project uses a Zomato dataset and takes the data through:-
 
 **S3 → Snowflake → dbt → Analytics → AI**
 
@@ -17,7 +17,6 @@ The AI layer adds three capabilities on top of the processed data:
 The project started from an end-to-end data engineering tutorial and was used as a hands-on implementation and learning project. I worked through the infrastructure, dbt models, Docker environment, AI components, and integration while adapting the project around my own setup.
 
 ---
-
 ## Architecture
 
 ![InsightFlow Architecture](docs/Architecture_Image.svg)
@@ -46,8 +45,6 @@ AI responses
 Analytics results
 
 ```
-
-
 ## Dataset
 
 The project uses the Zomato dataset provided with the original project reference.
@@ -66,7 +63,6 @@ The dataset is divided into 7 CSV datasets:
 1. Orders
 2. Order Items
 3. Reviews
-
 
 | Dataset        | Approximate size |
 |----------------|------------------|
@@ -90,8 +86,7 @@ data/
 └── reviews/
 
 ```
-
-Data Pipeline
+## Data Pipeline
 
 **1. Source → Amazon S3**
 
@@ -106,7 +101,6 @@ The storage structure follows one folder per dataset, with S3 acting as the raw 
 Snowflake is used as the central analytical data warehouse.
 
 The raw data is loaded into the RAW layer before dbt transformations are applied.
-
 ```text
 Amazon S3
     ↓
@@ -145,7 +139,6 @@ Staging
 ```
 
 The staging layer cleans and standardizes the source data.
-
 Examples include:
 
 - Data type conversion
@@ -155,7 +148,7 @@ Examples include:
 - Email normalization
 - Derived fields such as delivery status
 
-***Dimensions***
+**Dimensions**
 The project contains analytical dimensions such as:
 
 - `dim_restaurants`
@@ -163,13 +156,13 @@ The project contains analytical dimensions such as:
 - `dim_food`
 - `dim_date`
 
-***Facts***
+**Facts**
 Transactional data is represented through fact models such as:
 
 - `fct_orders`
 - `fct_order_items`
 
-***Business Marts***
+**Business Marts**
 The marts are designed around business questions rather than raw tables.
 
 Examples:
@@ -181,7 +174,7 @@ Examples:
 
 These models provide a cleaner layer for analytics and AI applications.
 
-## 4. AI Layer
+## AI Layer
 
 The AI layer is built on top of the transformed data. It currently contains three main capabilities.
 
@@ -233,6 +226,7 @@ Grounded Answer
 The system retrieves relevant review content before generating the answer.
 
 This allows the response to be grounded in the actual review data rather than relying only on the LLM's general knowledge.
+
 ![rag](docs/rag.png)
 
 **③ Text-to-SQL**
@@ -240,7 +234,6 @@ This allows the response to be grounded in the actual review data rather than re
 The third capability allows users to ask questions about the analytical warehouse using natural language.
 
 For example:
-
 Which city generated the highest revenue?
 
 The flow is:
@@ -287,6 +280,7 @@ The three capabilities solve different problems:
 
 
 **Airflow Orchestration**
+
 The Airflow environment has been configured and tested locally using Docker.
 
 However, the complete scheduled workflow could not be fully executed against Snowflake because the available Snowflake trial/free-tier credits were exhausted during development.
@@ -301,7 +295,7 @@ However, the complete scheduled workflow could not be fully executed against Sno
 | AI | Gemini API, Embeddings, RAG, Text-to-SQL |
 | Application | Streamlit |
 
-##Limitations##
+## Limitations
 - Snowflake: The trial credits were exhausted, so the complete cloud pipeline cannot currently be run end-to-end.
 - Dataset: ~2.3 GB of CSV data is kept outside GitHub.
 - AI APIs: LLM features depend on API availability, quotas, and rate limits.
@@ -313,7 +307,6 @@ However, the complete scheduled workflow could not be fully executed against Sno
 This project helped me understand how the different parts of a data stack connect rather than treating them as separate tools.
 
 I worked with:
-
 - S3 and cloud data storage
 - Snowflake and analytical warehousing
 - dbt transformations and data modelling
