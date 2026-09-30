@@ -54,15 +54,19 @@ The project uses the Zomato dataset provided with the original project reference
 
 The dataset is divided into 7 CSV datasets:
 
-1.Dimension Data
-2.Restaurants
-3.Users
-4.Food
-5.Menu
-6.Fact / Activity Data
-7.Orders
-8.Order Items
-9.Reviews
+**Dimension Data**
+
+1. Restaurants
+2. Users
+3. Food
+4. Menu
+
+**Fact / Activity Data**
+
+1. Orders
+2. Order Items
+3. Reviews
+
 
 | Dataset        | Approximate size |
 |----------------|------------------|
@@ -88,11 +92,13 @@ data/
 ```
 
 Data Pipeline
+
 **1. Source → Amazon S3**
 
 The raw CSV files are uploaded to Amazon S3.
 
 The storage structure follows one folder per dataset, with S3 acting as the raw data storage layer.
+
 ![s3](docs/AWS_S3.png)
 
 **2. S3 → Snowflake**
@@ -101,20 +107,24 @@ Snowflake is used as the central analytical data warehouse.
 
 The raw data is loaded into the RAW layer before dbt transformations are applied.
 
+```text
 Amazon S3
     ↓
 Snowflake
     ↓
 ZOMATO.RAW
+```
 
 The project separates raw, transformed, and analytical data into different schemas:
 
+```text
 ZOMATO
 │
 ├── RAW
 ├── STAGING
 ├── MARTS
 └── AI
+```
 ![snowflake](docs/snowflake_interface.png)
 
 **3. dbt Transformation Layer**
@@ -123,7 +133,7 @@ dbt handles the transformation of the raw Snowflake data.
 ![lineageGraph](docs/dbt_LineageGraph.png)
 
 The transformation flow is:
-
+```text
 RAW
   ↓
 STAGING
@@ -132,41 +142,42 @@ FACTS + DIMENSIONS
   ↓
 BUSINESS MARTS
 Staging
+```
 
 The staging layer cleans and standardizes the source data.
 
 Examples include:
 
-Data type conversion
-Column renaming
-Cleaning restaurant values
-Handling missing values
-Email normalization
-Derived fields such as delivery status
-Dimensions
+- Data type conversion
+- Column renaming
+- Cleaning restaurant values
+- Handling missing values
+- Email normalization
+- Derived fields such as delivery status
 
+***Dimensions***
 The project contains analytical dimensions such as:
 
-dim_restaurants
-dim_customer
-dim_food
-dim_date
-Facts
+- `dim_restaurants`
+- `dim_customer`
+- `dim_food`
+- `dim_date`
 
+***Facts***
 Transactional data is represented through fact models such as:
 
-fct_orders
-fct_order_items
-Business Marts
+- `fct_orders`
+- `fct_order_items`
 
+***Business Marts***
 The marts are designed around business questions rather than raw tables.
 
 Examples:
 
-mart_restaurant_performance
-mart_delivery_sla
-mart_daily_city_revenue
-mart_review_insights
+- `mart_restaurant_performance`
+- `mart_delivery_sla`
+- `mart_daily_city_revenue`
+- `mart_review_insights`
 
 These models provide a cleaner layer for analytics and AI applications.
 
@@ -179,7 +190,6 @@ The AI layer is built on top of the transformed data. It currently contains thre
 The first capability uses an LLM as a transformation step.
 
 Review text can be processed and converted into structured information such as:
-
 Sentiment
 Topic
 Summarized information
@@ -196,7 +206,6 @@ Enriched Review Data
   ↓
 Analytics
 ```
-
 This allows unstructured review text to become part of the analytical workflow.
 ![Review_Enrichment](docs/enrichreviews_1.png)
 ![Review_Enrichment](docs/enrichreviews_2.png)
@@ -208,7 +217,7 @@ The second capability is Retrieval-Augmented Generation (RAG).
 Reviews are converted into embeddings and stored for similarity-based retrieval.
 
 When a user asks a question:
-
+```text
 User Question
       ↓
   Embedding
@@ -220,7 +229,7 @@ Relevant Reviews
      LLM
       ↓
 Grounded Answer
-
+```
 The system retrieves relevant review content before generating the answer.
 
 This allows the response to be grounded in the actual review data rather than relying only on the LLM's general knowledge.
@@ -235,7 +244,7 @@ For example:
 Which city generated the highest revenue?
 
 The flow is:
-
+```text
 Natural Language
        ↓
       LLM
@@ -247,14 +256,13 @@ SELECT-only validation
    Snowflake
        ↓
      Result
-
+```
 The SQL generation is restricted to read-only queries before execution.
-
 This allows users to explore analytical data without manually writing SQL.
 ![text_to_sql](docs/text_to_sql.png)
 
 **AI Layer at a Glance**
-
+```text
                        AI LAYER
                            │
           ┌────────────────┼────────────────┐
@@ -268,7 +276,7 @@ This allows users to explore analytical data without manually writing SQL.
           └────────────────┼────────────────┘
                            ▼
                        Insights
-
+```
 The three capabilities solve different problems:
 
 | Capability     | Purpose                                                   |
@@ -293,48 +301,49 @@ However, the complete scheduled workflow could not be fully executed against Sno
 | AI | Gemini API, Embeddings, RAG, Text-to-SQL |
 | Application | Streamlit |
 
-##Limitations
--Snowflake: The trial credits were exhausted, so the complete cloud pipeline cannot currently be run end-to-end.
--Dataset: ~2.3 GB of CSV data is kept outside GitHub.
--AI APIs: LLM features depend on API availability, quotas, and rate limits.
--Dataset-specific: The current dbt models and business logic are built around the Zomato dataset.
--Production: Additional work would be required for production monitoring, secret management, CI/CD, alerting, and AI evaluation.
+##Limitations##
+- Snowflake: The trial credits were exhausted, so the complete cloud pipeline cannot currently be run end-to-end.
+- Dataset: ~2.3 GB of CSV data is kept outside GitHub.
+- AI APIs: LLM features depend on API availability, quotas, and rate limits.
+- Dataset-specific: The current dbt models and business logic are built around the Zomato dataset.
+- Production: Additional work would be required for production monitoring, secret management, CI/CD, alerting, and AI evaluation.
 
-##What I Learned
+## What I Learned
 
 This project helped me understand how the different parts of a data stack connect rather than treating them as separate tools.
 
 I worked with:
 
--S3 and cloud data storage
--Snowflake and analytical warehousing
--dbt transformations and data modelling
--Airflow and Docker
--LLM APIs and embeddings
--RAG
--Text-to-SQL
+- S3 and cloud data storage
+- Snowflake and analytical warehousing
+- dbt transformations and data modelling
+- Airflow and Docker
+- LLM APIs and embeddings
+- RAG
+- Text-to-SQL
 
 A major takeaway was that the quality of an AI application depends heavily on the data layer underneath it. Building the warehouse and transformation layer first made the AI components much more meaningful.
 
 The project also involved quite a bit of debugging, especially around dbt paths, Snowflake configuration, Docker environments, credentials, and Airflow integration. That was an important part of the learning process.
 
-##Future Improvements
--Complete the Airflow pipeline with an active Snowflake environment
--Add automated data-quality monitoring
--Improve RAG evaluation
--Evaluate Text-to-SQL accuracy
--Add pipeline alerts and better observability
--Add CI/CD for dbt and Airflow
--Make the pipeline easier to adapt to other datasets
+## Future Improvements 
+
+- Complete the Airflow pipeline with an active Snowflake environment
+- Add automated data-quality monitoring
+- Improve RAG evaluation
+- Evaluate Text-to-SQL accuracy
+- Add pipeline alerts and better observability
+- Add CI/CD for dbt and Airflow
+- Make the pipeline easier to adapt to other datasets
 
 
 This project was developed while following the Zomato AI Data Engineering project by Darshil Parmar.
 
-Tutorial
+Tutorial:-
 
 https://www.youtube.com/watch?v=kYwaNMQ3XT8
 
-Original Repository
+Original Repository:-
 
 https://github.com/darshilparmar/zomato-ai-data-engineering-end-to-end-project
 
